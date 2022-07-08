@@ -54,8 +54,8 @@ UIkit | MVVM | Realm | FireBase | SwiftLint |
 - 월 - db 종류 비교분석 및 선택
 - 화 - 곰튀김 강의 시청 및 STEP1 PR
 - 수 - 예습 및 STEP2 구상
-- 목 - 
-- 금 - 
+- 목 - tableView와 collectionView 의 선택 및 UI구상
+- 금 - STEP2-1구현 및 리드미 작성
 
 # 🤔 고민한점 ( Local & Remote DB )
 
@@ -261,24 +261,70 @@ UIkit | MVVM | Realm | FireBase | SwiftLint |
 ## reference
 https://medium.com/swift-blondie/cloudkit-vs-firebase-cb23d5e923b7
 
+## [STEP2-1]
+
+# 🤨고민한점
+- tableView로 구현하면서 어떤걸 고민하고 느꼈는지
+  - 첫째로, 내가 이해한봐로는 tableView에서 cell간의 간격을 띄어주려면 중간에 view를 생성하여 넣어줘야했다. 이는 cell이 별로없으면 상관이없겠지만 실제로 비즈니스한다고 생각할때는 많은 view를 생성해줘야한다고 생각했다. 그래서 이러한 비용이 꽤나 크게들어갈 것같아서 이렇게 구현하는게 맞을지 고민됬었다.
+  - tableView 3개로 구현할시 역할분리가 어려웠음 하나의 VC에서 관리해주어야할지 아니면 각각의 VC를 만들어서 관리해줘야할지(?) 고민하는게 어려웠따. 일단 view를 3개로 나눌 필요는 없었고 view라는게 사실 tableView 3개 외에는 특별한게 없어서 하나의 VC로 관리해보기로 하였따. 그런데 각각의 tableView로 data를 분배해주고 delegate를 구현해주고 하려다보니 에러가 발생했을때 에러찾는게 되게 번거롭고 시간도 오래걸렸다. 그래서 tableView3개로 고민하는게 맞을까 ? 라는 생각이들면서 collectionView로 구현하는건 어떨지에대해 고민하게되었다.
+
+- tableView와 collectionView 둘 중 어떤걸 사용할 것 인가?
+  - tableView는 단순하고 구현이쉽다는 장점이있다. collectionView와 tableView의 큰 차이점이 cell을 dynamic하게 그리고 여러개의 section을 나눠서 구현하는 유연성은 훨씬 collectionView가 월등하다고 생각했다. 그리고 apple에서 tableView에대해 손을 떼고 collectionView로 대체하는 흐름이기때문에 당장은 아니겠지만 나중에 tableView가 deprecated될 수도 ? 있지않을까 라는 가능성도 배제할 수 없어 조금은 불안했떤 것 같다.
+그리고 cell사이에 간격에 view를 추가로 넣어줄 필요없이 기본적으로 프로퍼티를 가지고 있었다. 추가로 collectionView는 compositionalLayout이라는 기능이 있기때문에 하나의 view안에 3개의 section을 나눠서 구현하면 요구사항대로 구현할 수도 있을거라고 판단했다.
+
+- collectionView로 UI를 구성한다면 어떻게 구현 해볼 수 있을까 ?
+<img width="976" alt="스크린샷 2022-07-08 14 54 06" src="https://user-images.githubusercontent.com/91132536/177934478-ccb2540d-c1b1-46c6-b745-e236aa531dd7.png">
 
 
-# 🔥TroubleShooting
+# 🧨TroubleShooting
+- tableView3개로 구현하는걸 시도했었다. todo Cell을 만들고 doing, done에게 상속을해주고 VC에서 tableView3개를 구현해보았다. 그런데 dataSource = self를 해주었으나 메서드가 3개의 tableView 중 어떠한 tableView의 cell을 업데이트해줘야할지 컴퓨터입장에서는 모른다는 것이다. 
+즉, `- tableView를 한 뷰컨에서 여러개쓸때 datasource에서 tableView구분을 일일히 해주지않으면 에러가난다. 야 너왜 cell tableView = self 이렇게 위임해서 내가 처리하게해놓고 cell등록을 안했어 ?
+그러니깐 뷰컨은 저렇게 tableView == todoTableView이렇게 지정을 해주지않으면 알아먹질 못하는 모양이다. 그래서 자 얘는 얘, 재는 재 이렇게 내가 지정해줬으니깐 datasource위임 잘 부탁할게 가 되야하는것이다.`
 
-## [STEP2]
+### [에러발생]
+<img width="852" alt="스크린샷 2022-07-07 10 08 37" src="https://user-images.githubusercontent.com/91132536/177931710-775c04cb-c1c8-44e7-8b55-2e1031ec5b0d.png">
 
-# 📅타임라인
+### [에러해결]
+<img width="803" alt="스크린샷 2022-07-07 10 36 57" src="https://user-images.githubusercontent.com/91132536/177932130-6a092534-f208-4406-83f8-3bcffb6153f8.png">
+
+- collectionView의 dynamicSize를 높이 설정에대한 이슈
+cell사이즈를 절대값으로 설정해주었더니 cell이 나오지않는 현상이 발생했다. stackoverFlow를 확인해보니 사이즈를 정해줄때 frame을 설정하면안되고 너비와 높이만 설정할 수 있다고 확인하였다. 그래서 아래와 같이 수정해주었더니 cell이 다시 확인되었다.
+[참고자료](https://stackoverflow.com/questions/32039297/uicollectionview-showing-only-one-cell-which-changes-when-the-view-is-scrolled)
+[참고자료2](https://stackoverflow.com/questions/38028013/how-to-set-uicollectionviewcell-width-and-height-programmatically))
+```swift
+  private let todoCollectionView: UICollectionView = {
+    let layout = UICollectionViewFlowLayout()
+    layout.scrollDirection = .vertical
+    
+    let cellWidth = UIScreen.main.bounds.width
+    let cellHeight = UIScreen.main.bounds.height / 4
+    layout.itemSize = CGSize(width: cellWidth, height: cellHeight)
+    
+    layout.estimatedItemSize = CGSize(width: cellWidth, height: cellHeight)
+    
+    layout.minimumInteritemSpacing = 0
+    layout.minimumLineSpacing = 5
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    collectionView.backgroundColor = .systemGray5
+    collectionView.translatesAutoresizingMaskIntoConstraints = false
+    collectionView.dragInteractionEnabled = true
+    return collectionView
+  }()
+```
+
+## [STEP2-2]
+# 🗓타임라인
 - 월 - 
 - 화 - 
 - 수 - 
 - 목 - 
 - 금 - 
-
 # 🤨고민한점
-
 # 🧨TroubleShooting
 
-
+## [STEP2-3]
+# 🤨고민한점
+# 🧨TroubleShooting
 
 ## ✅ 그라운드 룰
 
