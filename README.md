@@ -315,7 +315,7 @@ cell사이즈를 절대값으로 설정해주었더니 cell이 나오지않는 �
 ## [STEP2-2, 2-3]
 # 🤨고민한점 및 알게된점
 
-```swift=
+```swift
 required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -335,7 +335,7 @@ required init?(coder: NSCoder) {
 예를들어서 data관련된 값은 viewModel의 역할인데 dataSource프로퍼티에  snapshot을 통해 값을 binding하는게 데이터를 다루는 일이기때문에 viewModel의 역할이라고 볼 수 있다. 이럴때는 viewModel에 DataSource 타입을 가지려면 UIkit이 import되어야하기때문에 예외?인 상황이라고도 볼 수 있는것같다.
 
 - index를 안전하게 처리하는방법
-```swift=
+```swift
 extension Array {
   subscript (safe index: Index) -> Element? {
     return self.indices ~= index ? self[index] : nil
@@ -358,7 +358,7 @@ index는 혹여나 사이드이펙이든 예상치못한 상황에서 out of ran
 - DB저장할때 error발생시 어떻게 처리할 것인지?
 throws로 에러를 전파하여 VC에서 처리를 해주자니 throws 함수가 너무많아지고 반환타입을 Result같은걸로 받자니 Create같은 메서드는 반환타입이 필요없는데 사용하는게 옳은것일지? 잘 모르겠어서
 일단 아래와같이 노티피케이션으로 처리하였다.
-```swift=
+```swift
   private func postNotification(_ error: Error) {
     NotificationCenter.default.post(
       name: Notification.Name(rawValue: "RealmError"), object: error
