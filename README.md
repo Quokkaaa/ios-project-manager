@@ -12,6 +12,16 @@
 -- | -- | -- | -- | -- |
 UIkit | MVVM | Realm | FireBase | SwiftLint | 
 
+## 화면구성
+|[메인 화면] List 형식|
+|:---:|
+|<img width="776" alt="스크린샷 2022-10-04 21 17 28" src="https://user-images.githubusercontent.com/91132536/194051272-f6d902be-cb47-4c14-8a98-3f4d34e72767.png">|
+
+|[등록 화면] 할일 등록|[상세 화면] 등록한 할일 수정|[상세 화면] 등록한 할일 삭제|
+|:---:|:---:|:---:|
+|<img width="776" alt="스크린샷 2022-10-04 21 18 01" src="https://user-images.githubusercontent.com/91132536/194051552-3166152c-4432-4484-818e-6dfe781ecc25.png">| <img width="756" alt="스크린샷 2022-10-05 20 37 38" src="https://user-images.githubusercontent.com/91132536/194051747-0de5b16a-5d1e-4b87-aa13-9cb6b9ec3ea3.png">
+|<img width="272" alt="스크린샷 2022-10-04 21 17 53" src="https://user-images.githubusercontent.com/91132536/194051988-6154f240-2141-4230-8083-3f7286327776.png">|
+
 ## ✅ 프로젝트 중 핵심경험
 - [ ] UIKit / SwiftUI / RxCocoa 등 선택한 기술을 통한 UI 구현
 - [ ] 다양한 기술 중 목적에 맞는 기술선택
